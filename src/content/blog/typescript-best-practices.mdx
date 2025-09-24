@@ -1,0 +1,37 @@
+---
+title: "TypeScript 最佳实践"
+excerpt: "分享 TypeScript 开发中的最佳实践和技巧。"
+date: "2024-01-25"
+author: "ndzy"
+tags: ["TypeScript", "编程", "最佳实践"]
+---
+
+# TypeScript 最佳实践
+
+TypeScript 为 JavaScript 带来了类型安全，提高了代码质量。
+
+## 类型定义
+
+总是为函数参数和返回值定义类型：
+
+```typescript
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+
+## 接口使用
+
+使用接口来定义对象结构：
+
+```typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+```
+
+## 泛型
+
+利用泛型创建可重用的组件和函数。
