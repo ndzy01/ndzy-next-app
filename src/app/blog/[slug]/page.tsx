@@ -20,12 +20,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <header className="mb-8">
-          <Link
-            href="/blog"
-            className="text-blue-600 dark:text-blue-400 hover:underline mb-4 inline-block"
-          >
-            ← 返回博客列表
-          </Link>
+          <div className="flex gap-4 mb-4">
+            <Link
+              href="/"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              ← 返回首页
+            </Link>
+            <Link
+              href="/blog"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              ← 返回博客列表
+            </Link>
+          </div>
           
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             {post.title}
