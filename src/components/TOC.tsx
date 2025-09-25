@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { TocItem } from '@/types/blog';
-import Link from 'next/link';
+import { TocItem } from "@/types/blog";
+import Link from "next/link";
 
 interface TOCProps {
   items: TocItem[];
@@ -23,7 +23,10 @@ export default function TOC({ items }: TOCProps) {
       </h3>
       <ul className="space-y-1">
         {items.map((item) => (
-          <li key={item.id} style={{ marginLeft: `${(item.depth - 2) * 12}px` }}>
+          <li
+            key={item.id}
+            style={{ marginLeft: `${(item.depth - 2) * 12}px` }}
+          >
             <Link
               href={`#${item.id}`}
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors block py-1"

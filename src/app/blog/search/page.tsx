@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { MagnifyingGlassIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { ContentSearchResult } from '@/app/api/search/route';
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  MagnifyingGlassIcon,
+  ArrowLeftIcon,
+} from "@heroicons/react/24/outline";
+import { ContentSearchResult } from "@/app/api/search/route";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const [query, setQuery] = useState(searchParams.get("q") || "");
   const [results, setResults] = useState<ContentSearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,17 +30,19 @@ export default function SearchPage() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}&limit=20`);
+      const response = await fetch(
+        `/api/search?q=${encodeURIComponent(searchQuery)}&limit=20`,
+      );
       const data = await response.json();
 
       if (response.ok) {
         setResults(data.results || []);
         setTotalResults(data.total || 0);
       } else {
-        setError(data.error || '搜索失败');
+        setError(data.error || "搜索失败");
       }
     } catch (err) {
-      setError('网络错误，请稍后重试');
+      setError("网络错误，请稍后重试");
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +50,7 @@ export default function SearchPage() {
 
   // 初始搜索
   useEffect(() => {
-    const initialQuery = searchParams.get('q');
+    const initialQuery = searchParams.get("q");
     if (initialQuery) {
       setQuery(initialQuery);
       performSearch(initialQuery);
@@ -64,9 +69,15 @@ export default function SearchPage() {
   // 高亮搜索关键词
   const highlightText = (text: string, searchQuery: string) => {
     if (!searchQuery.trim()) return text;
-    
-    const regex = new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    return text.replace(regex, '<mark class="bg-yellow-200 dark:bg-yellow-800">$1</mark>');
+
+    const regex = new RegExp(
+      `(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+      "gi",
+    );
+    return text.replace(
+      regex,
+      '<mark class="bg-yellow-200 dark:bg-yellow-800">$1</mark>',
+    );
   };
 
   return (
@@ -74,8 +85,8 @@ export default function SearchPage() {
       <div className="max-w-4xl mx-auto px-4">
         {/* 导航 */}
         <div className="mb-8">
-          <Link 
-            href="/blog" 
+          <Link
+            href="/blog"
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-2" />
@@ -85,8 +96,12 @@ export default function SearchPage() {
 
         {/* 搜索标题 */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">搜索博客</h1>
-          <p className="text-gray-600 dark:text-gray-300">在所有文章中搜索内容</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            搜索博客
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
+            在所有文章中搜索内容
+          </p>
         </div>
 
         {/* 搜索框 */}
@@ -109,10 +124,9 @@ export default function SearchPage() {
         {query && !isLoading && (
           <div className="mb-6 text-center">
             <p className="text-gray-600 dark:text-gray-300">
-              {totalResults > 0 
-                ? `找到 ${totalResults} 个关于 "${query}" 的结果` 
-                : `未找到关于 "${query}" 的结果`
-              }
+              {totalResults > 0
+                ? `找到 ${totalResults} 个关于 "${query}" 的结果`
+                : `未找到关于 "${query}" 的结果`}
             </p>
           </div>
         )}
@@ -136,39 +150,40 @@ export default function SearchPage() {
         {!isLoading && results.length > 0 && (
           <div className="space-y-6">
             {results.map((result) => (
-              <article 
-                key={result.id} 
+              <article
+                key={result.id}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow"
               >
                 <Link href={`/blog/${result.slug}`} className="block">
-                  <h2 
+                  <h2
                     className="text-xl font-semibold text-gray-900 dark:text-white mb-2 hover:text-blue-600 dark:hover:text-blue-400"
-                    dangerouslySetInnerHTML={{ 
-                      __html: highlightText(result.title, query) 
+                    dangerouslySetInnerHTML={{
+                      __html: highlightText(result.title, query),
                     }}
                   />
-                  
-                  <p 
+
+                  <p
                     className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-2"
-                    dangerouslySetInnerHTML={{ 
-                      __html: highlightText(result.excerpt, query) 
+                    dangerouslySetInnerHTML={{
+                      __html: highlightText(result.excerpt, query),
                     }}
                   />
 
                   {/* 内容片段 */}
-                  {result.contentSnippets && result.contentSnippets.length > 0 && (
-                    <div className="mb-3">
-                      {result.contentSnippets.map((snippet, index) => (
-                        <p 
-                          key={index}
-                          className="text-sm text-gray-500 dark:text-gray-400 mb-1"
-                          dangerouslySetInnerHTML={{ 
-                            __html: highlightText(snippet, query) 
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
+                  {result.contentSnippets &&
+                    result.contentSnippets.length > 0 && (
+                      <div className="mb-3">
+                        {result.contentSnippets.map((snippet, index) => (
+                          <p
+                            key={index}
+                            className="text-sm text-gray-500 dark:text-gray-400 mb-1"
+                            dangerouslySetInnerHTML={{
+                              __html: highlightText(snippet, query),
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
 
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <div className="flex items-center space-x-4">
@@ -176,13 +191,13 @@ export default function SearchPage() {
                       <span>作者: {result.author}</span>
                       {result.matchedContent.length > 0 && (
                         <span className="text-blue-500">
-                          匹配: {result.matchedContent.join(', ')}
+                          匹配: {result.matchedContent.join(", ")}
                         </span>
                       )}
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {result.tags.map((tag) => (
-                        <span 
+                        <span
                           key={tag}
                           className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-xs"
                         >
@@ -201,7 +216,9 @@ export default function SearchPage() {
         {!isLoading && query && results.length === 0 && !error && (
           <div className="text-center py-12">
             <MagnifyingGlassIcon className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">未找到相关结果</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              未找到相关结果
+            </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               尝试使用不同的关键词或检查拼写
             </p>
@@ -221,7 +238,9 @@ export default function SearchPage() {
         {!query && !isLoading && (
           <div className="text-center py-12">
             <MagnifyingGlassIcon className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">开始搜索</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              开始搜索
+            </h3>
             <p className="text-gray-600 dark:text-gray-300">
               在上方输入关键词来搜索博客文章
             </p>

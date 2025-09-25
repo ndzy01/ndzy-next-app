@@ -1,7 +1,7 @@
-import { getPostBySlug, getAllPostMetadata } from '@/lib/mdx';
-import { notFound } from 'next/navigation';
-import MDXContent from '@/components/MDXContent';
-import TOC from '@/components/TOC';
+import { getPostBySlug, getAllPostMetadata } from "@/lib/mdx";
+import { notFound } from "next/navigation";
+import MDXContent from "@/components/MDXContent";
+import TOC from "@/components/TOC";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -19,7 +19,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <header className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">{post.title}</h1>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            {post.title}
+          </h1>
           <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-6">
             <span>{post.date}</span>
             <span>作者: {post.author}</span>
@@ -71,7 +73,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
 
   if (!post) {
     return {
-      title: '文章未找到',
+      title: "文章未找到",
     };
   }
 

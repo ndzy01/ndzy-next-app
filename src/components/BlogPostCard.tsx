@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { BlogPostMeta } from '../types/blog';
+import Link from "next/link";
+import { BlogPostMeta } from "../types/blog";
 
 interface BlogPostCardProps {
   post: BlogPostMeta;
@@ -13,16 +13,16 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
           {post.title}
         </h2>
       </Link>
-      
+
       <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
         {post.excerpt}
       </p>
-      
+
       <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
         <span>{post.date}</span>
         <span>作者: {post.author}</span>
       </div>
-      
+
       <div className="mt-4 flex flex-wrap gap-2">
         {post.tags.map((tag: string) => (
           <span

@@ -1,10 +1,14 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { MagnifyingGlassIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import SearchBox from './SearchBox';
-import { BlogPostMeta } from '@/types/blog';
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import {
+  MagnifyingGlassIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import SearchBox from "./SearchBox";
+import { BlogPostMeta } from "@/types/blog";
 
 export function GlobalHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,13 +19,13 @@ export function GlobalHeader() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('/api/posts');
+        const response = await fetch("/api/posts");
         if (response.ok) {
           const postsData = await response.json();
           setPosts(postsData);
         }
       } catch (error) {
-        console.error('Failed to fetch posts:', error);
+        console.error("Failed to fetch posts:", error);
       }
     };
 
@@ -34,21 +38,24 @@ export function GlobalHeader() {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
+            <Link
+              href="/"
+              className="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
+            >
               ndzy的博客
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
             >
               首页
             </Link>
-            <Link 
-              href="/blog" 
+            <Link
+              href="/blog"
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
             >
               博客
@@ -60,9 +67,9 @@ export function GlobalHeader() {
             {/* Desktop Search */}
             <div className="hidden md:block">
               <div className="relative">
-                <SearchBox 
+                <SearchBox
                   posts={posts}
-                  placeholder="搜索文章..." 
+                  placeholder="搜索文章..."
                   className="w-64"
                 />
               </div>
@@ -93,9 +100,9 @@ export function GlobalHeader() {
         {/* Mobile Search Bar */}
         {isSearchOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-            <SearchBox 
+            <SearchBox
               posts={posts}
-              placeholder="搜索文章..." 
+              placeholder="搜索文章..."
               className="w-full"
             />
           </div>
@@ -105,15 +112,15 @@ export function GlobalHeader() {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
             <nav className="flex flex-col space-y-2">
-              <Link 
-                href="/" 
+              <Link
+                href="/"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 首页
               </Link>
-              <Link 
-                href="/blog" 
+              <Link
+                href="/blog"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >

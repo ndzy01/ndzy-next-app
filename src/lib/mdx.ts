@@ -1,18 +1,18 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { MDXBlogPost, BlogPostMeta } from '@/types/blog';
-import { extractToc } from './toc';
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { MDXBlogPost, BlogPostMeta } from "@/types/blog";
+import { extractToc } from "./toc";
 
-const contentDirectory = path.join(process.cwd(), 'src/content/blog');
+const contentDirectory = path.join(process.cwd(), "src/content/blog");
 
 export async function getAllPostMetadata(): Promise<BlogPostMeta[]> {
   const fileNames = fs.readdirSync(contentDirectory);
-  
+
   const posts = fileNames.map((fileName) => {
-    const slug = fileName.replace(/\.mdx$/, '');
+    const slug = fileName.replace(/\.mdx$/, "");
     const fullPath = path.join(contentDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data } = matter(fileContents);
 
     return {
@@ -27,13 +27,15 @@ export async function getAllPostMetadata(): Promise<BlogPostMeta[]> {
   });
 
   // Sort by date
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return posts.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 }
 
 export async function getPostBySlug(slug: string): Promise<MDXBlogPost | null> {
   try {
     const fullPath = path.join(contentDirectory, `${slug}.mdx`);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
 
     // Extract table of contents from the content
@@ -58,5 +60,5 @@ export async function getPostBySlug(slug: string): Promise<MDXBlogPost | null> {
 
 export async function getPostsByTag(tag: string): Promise<BlogPostMeta[]> {
   const posts = await getAllPostMetadata();
-  return posts.filter(post => post.tags.includes(tag));
+  return posts.filter((post) => post.tags.includes(tag));
 }
