@@ -9,8 +9,8 @@ export interface BlogPostMeta {
 }
 
 export interface MDXBlogPost extends BlogPostMeta {
-  mdxContent: string; // For MDX serialized content
-  toc: TocItem[]; // Table of contents
+  mdxContent: string;
+  toc: TocItem[];
 }
 
 export interface TocItem {
