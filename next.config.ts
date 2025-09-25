@@ -4,22 +4,24 @@ const nextConfig: NextConfig = {
   // Configure pageExtensions to include md and mdx for potential future use
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   
-  // Static export configuration for GitHub Pages
-  output: 'export',
-  
-  // Base path for GitHub Pages (replace 'ndzy-next-app' with your repo name)
-  basePath: '/ndzy-next-app',
-  
-  // Asset prefix for correct resource loading
-  assetPrefix: '/ndzy-next-app/',
+  // Conditional configuration based on environment
+  ...(process.env.NODE_ENV === 'production' ? {
+    // Static export configuration for GitHub Pages (production only)
+    output: 'export',
+    basePath: '/ndzy-next-app',
+    assetPrefix: '/ndzy-next-app/',
+    trailingSlash: true,
+  } : {
+    // Development configuration with API routes support
+    basePath: '',
+    assetPrefix: '',
+    trailingSlash: false,
+  }),
   
   // Disable image optimization for static export
   images: {
     unoptimized: true,
   },
-  
-  // Trailing slash for better compatibility with static hosting
-  trailingSlash: true,
 };
 
 export default nextConfig;
