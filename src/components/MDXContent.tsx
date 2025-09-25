@@ -1,6 +1,7 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeHighlight from 'rehype-highlight';
 import React from 'react';
 
 interface MDXContentProps {
@@ -31,7 +32,7 @@ const components = {
     return <code {...props} />;
   },
   pre: (props: React.ComponentPropsWithoutRef<'pre'>) => (
-    <pre className="bg-gray-900 dark:bg-black text-gray-100 p-4 rounded-lg overflow-x-auto mb-4" {...props} />
+    <pre className="hljs bg-gray-50 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto mb-4 text-sm" {...props} />
   ),
   table: (props: React.ComponentPropsWithoutRef<'table'>) => (
     <div className="overflow-x-auto mb-4">
@@ -60,6 +61,7 @@ export default function MDXContent({ content, className = '' }: MDXContentProps)
             rehypePlugins: [
               rehypeSlug,
               [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+              rehypeHighlight,
             ],
           },
         }} 
