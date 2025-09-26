@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAllPostMetadata, getPostBySlug } from '@/lib/mdx'
 import { BlogPostMeta } from '@/types/blog'
+import { getToken } from 'next-auth/jwt'
 
 export interface ContentSearchResult extends BlogPostMeta {
   relevanceScore: number
@@ -11,6 +12,20 @@ export interface ContentSearchResult extends BlogPostMeta {
 // 服务端全文搜索API
 export async function GET(request: NextRequest) {
   try {
+    // 验证用户是否已登录
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    })
+
+    // 如果用户未登录，返回401未授权
+    if (!token) {
+      return NextResponse.json(
+        { error: '需要登录才能使用搜索功能' },
+        { status: 401 }
+      )
+    }
+    
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('q')
     const limit = parseInt(searchParams.get('limit') || '10')

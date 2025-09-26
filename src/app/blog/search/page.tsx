@@ -5,15 +5,26 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MagnifyingGlassIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { ContentSearchResult } from '@/app/api/search/route'
+import { useSession } from 'next-auth/react'
 
 function SearchPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { status } = useSession()
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const [results, setResults] = useState<ContentSearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [totalResults, setTotalResults] = useState(0)
+
+  // 如果用户未登录，重定向到登录页面
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push(
+        '/auth/signin?callbackUrl=' + encodeURIComponent('/blog/search')
+      )
+    }
+  }, [status, router])
 
   // 执行搜索
   const performSearch = async (searchQuery: string) => {

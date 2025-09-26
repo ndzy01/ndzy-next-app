@@ -18,22 +18,25 @@ export function GlobalHeader() {
   const [posts, setPosts] = useState<BlogPostMeta[]>([])
   const { data: session, status } = useSession()
 
-  // 获取博客文章数据
+  // 获取博客文章数据，只有用户登录时才获取
   useEffect(() => {
     const fetchPosts = async () => {
-      try {
-        const response = await fetch('/api/posts')
-        if (response.ok) {
-          const postsData = await response.json()
-          setPosts(postsData)
+      // 只有用户已登录时才获取文章数据
+      if (status === 'authenticated') {
+        try {
+          const response = await fetch('/api/posts')
+          if (response.ok) {
+            const postsData = await response.json()
+            setPosts(postsData)
+          }
+        } catch (error) {
+          console.error('Failed to fetch posts:', error)
         }
-      } catch (error) {
-        console.error('Failed to fetch posts:', error)
       }
     }
 
     fetchPosts()
-  }, [])
+  }, [status])
 
   return (
     <header className='bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50'>
@@ -88,24 +91,28 @@ export function GlobalHeader() {
 
           {/* Search and Mobile Menu */}
           <div className='flex items-center space-x-4'>
-            {/* Desktop Search */}
-            <div className='hidden md:block'>
-              <div className='relative'>
-                <SearchBox
-                  posts={posts}
-                  placeholder='搜索文章...'
-                  className='w-64'
-                />
+            {/* Desktop Search - Only visible when logged in */}
+            {status === 'authenticated' && (
+              <div className='hidden md:block'>
+                <div className='relative'>
+                  <SearchBox
+                    posts={posts}
+                    placeholder='搜索文章...'
+                    className='w-64'
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Mobile Search Button */}
-            <button
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className='md:hidden p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-            >
-              <MagnifyingGlassIcon className='h-5 w-5' />
-            </button>
+            {/* Mobile Search Button - Only visible when logged in */}
+            {status === 'authenticated' && (
+              <button
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className='md:hidden p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+              >
+                <MagnifyingGlassIcon className='h-5 w-5' />
+              </button>
+            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -121,8 +128,8 @@ export function GlobalHeader() {
           </div>
         </div>
 
-        {/* Mobile Search Bar */}
-        {isSearchOpen && (
+        {/* Mobile Search Bar - Only visible when logged in */}
+        {isSearchOpen && status === 'authenticated' && (
           <div className='md:hidden py-4 border-t border-gray-200 dark:border-gray-700'>
             <SearchBox
               posts={posts}
