@@ -6,14 +6,17 @@ import {
   MagnifyingGlassIcon,
   Bars3Icon,
   XMarkIcon,
+  UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import SearchBox from './SearchBox'
 import { BlogPostMeta } from '@/types/blog'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 export function GlobalHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [posts, setPosts] = useState<BlogPostMeta[]>([])
+  const { data: session, status } = useSession()
 
   // 获取博客文章数据
   useEffect(() => {
@@ -60,6 +63,27 @@ export function GlobalHeader() {
             >
               博客
             </Link>
+            {status === 'authenticated' ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-gray-700 dark:text-gray-300 text-sm">
+                  {session.user?.name}
+                </span>
+                <button
+                  onClick={() => signOut()}
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
+                >
+                  登出
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => signIn('github')}
+                className="flex items-center text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
+              >
+                <UserCircleIcon className="h-5 w-5 mr-1" />
+                登录
+              </button>
+            )}
           </nav>
 
           {/* Search and Mobile Menu */}
@@ -126,6 +150,33 @@ export function GlobalHeader() {
               >
                 博客
               </Link>
+              {status === 'authenticated' ? (
+                <>
+                  <div className="text-gray-700 dark:text-gray-300 px-3 py-2 text-sm font-medium">
+                    {session.user?.name}
+                  </div>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-left text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
+                  >
+                    登出
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => {
+                    signIn('github');
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center text-left text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
+                >
+                  <UserCircleIcon className="h-5 w-5 mr-1" />
+                  登录
+                </button>
+              )}
             </nav>
           </div>
         )}
