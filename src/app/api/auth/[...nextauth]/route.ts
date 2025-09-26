@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
   },
+  secret: process.env.NEXTAUTH_SECRET, // 显式指定 secret
 }
 
 const handler = NextAuth(authOptions)

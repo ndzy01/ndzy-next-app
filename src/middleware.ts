@@ -1,21 +1,31 @@
 import { NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import type { NextRequest } from 'next/server'
+import logger from '@/lib/logger'
 
 export async function middleware(request: NextRequest) {
+  logger.info('Middleware executed')
+
   // 获取请求中的token（如果用户已登录，则存在）
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   })
 
+  logger.info('Current Token:', token)
+
   const { pathname } = request.nextUrl
+
+  logger.info('Requested Path:', pathname)
 
   // 检查路由是否需要保护（匹配/blog路径）
   const isProtectedRoute = pathname.startsWith('/blog')
-  
+
+  logger.info('Is Protected Route:', isProtectedRoute)
+
   // 如果是受保护的路由且用户未登录，则重定向到登录页
   if (isProtectedRoute && !token) {
+    logger.info('Redirecting to login page')
     // 将当前URL保存为callbackUrl，登录后可以返回到这个页面
     const url = new URL('/auth/signin', request.url)
     url.searchParams.set('callbackUrl', encodeURI(request.url))
