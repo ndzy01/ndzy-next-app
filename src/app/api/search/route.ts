@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAllPostMetadata, getPostBySlug } from '@/lib/mdx'
 import { BlogPostMeta } from '@/types/blog'
-import { getToken } from 'next-auth/jwt'
+import { requireAuth } from '@/lib/auth-utils'
+import logger from '@/lib/logger'
 
 export interface ContentSearchResult extends BlogPostMeta {
   relevanceScore: number
@@ -13,19 +14,16 @@ export interface ContentSearchResult extends BlogPostMeta {
 export async function GET(request: NextRequest) {
   try {
     // 验证用户是否已登录
-    const token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    })
+    const { response, isAuthenticated, token } = await requireAuth(
+      request,
+      '需要登录才能使用搜索功能'
+    )
 
     // 如果用户未登录，返回401未授权
-    if (!token) {
-      return NextResponse.json(
-        { error: '需要登录才能使用搜索功能' },
-        { status: 401 }
-      )
+    if (!isAuthenticated) {
+      return response
     }
-    
+
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('q')
     const limit = parseInt(searchParams.get('limit') || '10')
@@ -42,10 +40,13 @@ export async function GET(request: NextRequest) {
     // 获取所有文章元数据
     const posts = await getAllPostMetadata()
 
+    logger.info('Search parameters:', { query, tags, author })
+
     // 并行搜索所有文章内容
     const searchPromises = posts.map(async (post) => {
       try {
         const fullPost = await getPostBySlug(post.slug)
+        logger.info(`Searching post: ${post.slug}`, fullPost)
         if (!fullPost) return null
 
         let relevanceScore = 0
