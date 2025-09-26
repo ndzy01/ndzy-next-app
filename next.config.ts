@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   ...(process.env.NODE_ENV === 'production'
     ? {
         // Static export configuration for GitHub Pages (production only)
-        output: 'export',
+        // output: 'export',
         basePath: '/ndzy-next-app',
         assetPrefix: '/ndzy-next-app/',
         trailingSlash: true,
