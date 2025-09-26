@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MagnifyingGlassIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { ContentSearchResult } from '@/app/api/search/route'
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [query, setQuery] = useState(searchParams.get('q') || '')
@@ -246,5 +246,13 @@ export default function SearchPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>加载中...</div>}>
+      <SearchPageContent />
+    </Suspense>
   )
 }
