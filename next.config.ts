@@ -9,9 +9,9 @@ const nextConfig: NextConfig = {
     ? {
         // Static export configuration for GitHub Pages (production only)
         // output: 'export',
-        basePath: '/ndzy-next-app',
-        assetPrefix: '/ndzy-next-app/',
-        trailingSlash: true,
+        // basePath: '/ndzy-next-app',
+        // assetPrefix: '/ndzy-next-app/',
+        // trailingSlash: true,
       }
     : {
         // Development configuration with API routes support
